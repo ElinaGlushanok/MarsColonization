@@ -1,15 +1,50 @@
 from flask import Flask, url_for, request
 
 app = Flask(__name__)
+planets = {
+    "меркурий": {"Факт": "Через одну планету от Земли;",
+                        1: "Она довольно маленькая;",
+                        2: "Слишком близко к Солнцу;",
+                        3: "Не пригодна для жизни."},
+    "венера": {"Факт": "Довольно близко к Земле;",
+               1: "Вторая планета от Солнца;",
+               2: "Вращается вокруг своей оси с востока на запад;",
+               3: "Температура на Венере 425 градусов по Цельсию."},
+    "земля": {"Факт": "Вы и так на Земле;",
+              1: "Она уже освоена",
+              2: "Странно предлагать освоить Землю",
+              3: "Вы точно человек?"},
+    "марс": {"Факт": "Эта планета близка к Земле;",
+             1: "На ней много необходимых ресурсов;",
+             2: "На ней есть вода и атмосфера;",
+             3: "На ней есть небольшое магнитное поле."},
+    "юпитер": {"Факт": "Через одну от Земли;",
+               1: "У Юпитера самое мощное в Солнечной системе магнитное поле;",
+               2: "День на Юпитере длится 10 земных часов;",
+               3: "Генерирует мощное радиационное излучение."},
+    "нептун": {"Факт": "Является самой далекой планетой;",
+               1: "Самый маленький из газовых гигантов;",
+               2: "Его поверхностная гравитация почти равна Земной;",
+               3: "На планете самые сильные ветры в Солнечной системе."},
 
+    "уран": {"Факт": "Уран открывали 3 раза;",
+               1: "Один год на Уране приравнивается 84 годам на Земле;",
+               2: "Атмосфера Урана признана самой холодной;",
+               3: "Является 3 ей по массе планетой во вселенной."},
+    "сатурн": {"Факт": "Сатурн легче воды;",
+               1: "У Сатурна самые большие кольца в Солнечной системе;",
+               2: "Сатурн не имеет поверхности;",
+               3: "На Сатурне идут алмазные дожди."}}
 
 @app.route('/')
 def mission():
     return "Миссия Колонизация Марса"
 
+
 @app.route('/index')
 def index():
     return "И на Марсе будут яблони цвести!"
+
 
 @app.route("/promotion")
 def promotion():
@@ -17,6 +52,7 @@ def promotion():
                          'Человечеству мала одна планета.',
                          'Мы сделаем обитаемыми безжизненные пока планеты.',
                          'И начнем с Марса!', 'Присоединяйся!'])
+
 
 @app.route("/image_mars")
 def image_mars():
@@ -34,6 +70,7 @@ def image_mars():
                     <p>вот она какая, красная планета.</p>           
                   </body>
                 </html>'''
+
 
 @app.route('/promotion_image')
 def promotion_image():
@@ -60,17 +97,20 @@ def promotion_image():
                       </body>
                     </html>'''
 
+
 @app.route("/astronaut_selection", methods=["GET", "POST"])
 def astronaut_selection():
     if request.method == "GET":
-        professions = ['инженер-исследователь', 'пилот', 'строитель', 'экзобиолог', 'врач', 'инженер по терраформированию', 'климатолог',
-                       'специалист по радиационной защите', 'астрогеолог', 'гляциолог', 'инженер жизнеобеспечения', 'метеоролог',
+        professions = ['инженер-исследователь', 'пилот', 'строитель', 'экзобиолог', 'врач',
+                       'инженер по терраформированию', 'климатолог',
+                       'специалист по радиационной защите', 'астрогеолог', 'гляциолог', 'инженер жизнеобеспечения',
+                       'метеоролог',
                        'оператор марсохода', 'киберинженер', 'штурман', 'пилот дронов']
         profession_html_text = '\n'.join(list(f'''
                                         <div class="form-group form-check">
                                             <input type="checkbox" class="form-check-input" id="yourProfession" name="profession">
                                             <label class="form-check-label" for="acceptRules">{profession}</label>
-                                        </div>'''for profession in professions))
+                                        </div>''' for profession in professions))
         return f'''<!doctype html>
                         <html lang="en">
                           <head>
@@ -142,8 +182,30 @@ def astronaut_selection():
         print(request.form['sex'])
         return "Форма отправлена"
 
+
+@app.route("/choice/<planet_name>")
+def choice(planet_name):
+    global planets
+    planet_name = planet_name.lower()
+    return f'''<!doctype html>
+                        <html lang="en">
+                          <head>
+                            <meta charset="utf-8">
+                            <link rel="stylesheet"
+                                href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" 
+                                integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" 
+                                crossorigin="anonymous">
+                        <title>Колонизация</title>
+                          </head>
+                          <body>
+                            <h1 class="mars">Мое предложение: {planet_name}</h1>
+                            <h2>{planets[planet_name]["Факт"]}</h2>
+                            <div class="alert alert-warning" role="alert">{planets[planet_name][1]}</div>
+                            <div class="alert alert-success" role="alert">{planets[planet_name][2]}</div> 
+                            <div class="alert alert-danger" role="alert">{planets[planet_name][3]}</div>                          
+                          </body>
+                        </html>'''
+
+
 if __name__ == '__main__':
     app.run(port=8080, host='127.0.0.1')
-
-
-
