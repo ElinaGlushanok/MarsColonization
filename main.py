@@ -198,7 +198,7 @@ def choice(planet_name):
                         <title>Колонизация</title>
                           </head>
                           <body>
-                            <h1 class="mars">Мое предложение: {planet_name}</h1>
+                            <h1 class="mars">Мое предложение: {planet_name.capitalize()}</h1>
                             <h2>{planets[planet_name]["Факт"]}</h2>
                             <div class="alert alert-warning" role="alert">{planets[planet_name][1]}</div>
                             <div class="alert alert-success" role="alert">{planets[planet_name][2]}</div> 
